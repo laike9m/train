@@ -55,6 +55,8 @@ def main(nontrans,kmeans):
     w_s = 20    #similarity Î±¾ä×Ó³¤¶È
     if os.path.exists('boundary_deserted.txt'):
         os.remove('boundary_deserted.txt')
+    if not os.path.exists('seginfo'):
+        os.mkdir('seginfo')
     
     for (sgmfile,sttfile,resfile) in zip(sgmfiles[:25],sttfiles[:25],resfiles[:25]):
         print(sgmfile,sttfile,resfile)
@@ -393,6 +395,7 @@ def main(nontrans,kmeans):
         stt.close()
         res.close()
         pickle.dump(train,open('trainfile\\%s.train' % name,'wb'))
+        pickle.dump(seg_info,open('seginfo\\%s.seginfo') % name,'wb')
         print(name+' finished')        
     
     boundary_deserted.close()    

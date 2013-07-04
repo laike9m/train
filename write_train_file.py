@@ -2,6 +2,7 @@
 
 import pickle
 import os
+import GUI_CMP
 
 def hms2s(res_time):
     #把res中的时间h:m:s转化为以s表示,方便之后比较'''
@@ -42,7 +43,7 @@ def all_f():
     Merge('all')
     
 def one_f():
-    #生成仅包含特征的训练文件
+    #生成仅包含某一种特征的训练文件
     for train,name in zip(train_list,name_list):
         crfsuite = open('trainfile\\%s.train.crfsuite' % name, 'wt')
         for d in train:
@@ -71,10 +72,6 @@ def add_chain(line,d):  #添加词链特征
          d['os']['0'],d['os']['1'],d['os']['2'],d['os']['3'],
          )
 
-'''
-def add_chain_nocontext(line,d):  #添加词链特征
-    return line+'\tow[0]=%s\tos[0]=%s' % (d['ow']['0'],d['os']['0'])
-'''
           
 def add_sim(line,d):    #添加相似度特征
     return line+'\ts[-3]=%s\ts[-2]=%s\ts[-1]=%s\ts[1]=%s\ts[2]=%s\ts[3]=%s\ts[-2]|s[-1]=%s|%s\t\
@@ -86,21 +83,13 @@ def add_sim(line,d):    #添加相似度特征
             d['similarity']['1'],d['similarity']['2'],
             d['similarity']['1'],d['similarity']['2'],d['similarity']['3'])
 
-
-'''
-def add_sim_nocontext(line,d):    #添加相似度特征
-    return line+'\ts[-1]=%s\ts[1]=%s' % (d['similarity']['-1'],d['similarity']['1'])
-'''
     
 def add_pitch(line,d):  #添加pitch特征
     if 'lafs' in list(d.keys()):
         values = (d['laft'],d['raft'],d['reset_t'],d['lafs'],d['rafs'],d['reset_s'])
-        #values = (d['lafs'],d['rafs'],d['reset_s'])
     else:
         values = ('A','A','A','A','A','A')
-        #values = ('A','A','A')
     return line+'\tlaft=%s\traft=%s\treset_t=%s\tlafs=%s\trafs=%s\treset_s=%s' % values
-    #return line+'\tlafs=%s\trafs=%s\treset_s=%s' % values
 
 def add_spk(line,d):    #添加说话人变化特征
     return line+'\tspk=%s' % d['spkchange']
@@ -194,26 +183,32 @@ def Merge(ftype):
     os.system('move /y %s.train.crfsuite ..\\..\\CRF_train\\%s.train.crfsuite' % (ftype,ftype))
     os.system('move /y %s.test.crfsuite ..\\..\\CRF_train\\%s.test.crfsuite' % (ftype,ftype))
 
-def main():
+def main(mode='train'):
     '''
+        两种模式,默认是train,先生成模型再测试,如果mode='test',表示用现有的模型做测试
         如果没有特殊情况就不再执行make_feature_dict,只运行这个文件
      mc一共有25个文件,用前20个训练，后5个测试
         根据调用的函数不同,生成的训练文件种类不同
         每个mc自己的训练文件是每次都覆盖,但是合并后的训练文件不会覆盖,除非运行生成同样特征训练文件的程序
     '''
-    global train_list 
-    train_list = [pickle.load(open('trainfile\\%s' % f,'rb')) for f \
-                in os.listdir('trainfile') if f.endswith('train')]
-    global name_list
-    name_list = [f.rstrip('.train') for f in os.listdir('trainfile') if f.endswith('train')]
-    global trainslice,testslice
-    trainslice = slice(0,20)
-    testslice = slice(20,25)
-    add_features(chain=1,sim=1,pitch=0,spk=1)
-    fifteen()
+    if mode == 'train':
+        global train_list 
+        train_list = [pickle.load(open('trainfile\\%s' % f,'rb')) for f \
+                    in os.listdir('trainfile') if f.endswith('train')]
+        global name_list
+        name_list = [f.rstrip('.train') for f in os.listdir('trainfile') if f.endswith('train')]
+        global trainslice,testslice
+        trainslice = slice(0,20)
+        testslice = slice(20,25)
+        add_features(chain=1,sim=1,pitch=0,spk=1)
+        fifteen()
+    elif mode == 'test':
+        pass
+    else:
+        print('模式选择错误,请检查参数')
+        
+        
+        
     
-    
-    
-
 if __name__ == '__main__':
     main()
