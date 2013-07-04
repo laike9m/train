@@ -123,7 +123,7 @@ def fifteen():  #将原始结果按照15s原则重新计算准确召回f-measure
     tag_boundary = 0    #标记出的边界数量
     for d,tag in zip(test_d_list,tag_list):
         tag_boundary += int(tag)
-        d['tag'] = int(tag) #在dict中添加tag用来表示是否被识别为边界
+        d['tag'] = int(tag) #在dict中添加tag用来表示是否被识别为边界,改变了原始的train因为test_d_list的元素是引用
     recall = 0  #正确识别的边界数量
     index = -1
     for d in test_d_list:
@@ -206,6 +206,10 @@ def main(mode='train'):
         pass
     else:
         print('模式选择错误,请检查参数')
+    
+    seginfo_list = [piclle.load(open('seginfo\\%s') % f for f \
+                    in os.listdir('seginfo') if f.endswith('seginfo'))]
+    gui = GUI_CMP(name_list[testslice],seginfo_list[testslice],train_list[testslice])#显示图形界面
         
         
         

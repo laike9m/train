@@ -5,7 +5,10 @@ from tkinter import font
 import tkinter.ttk as ttk
 
 class GUI_CMP():
-    def __init__(self):
+    def __init__(self,name_list,seginfo_list,train_list,):
+        self.seginfo_list = seginfo_list
+        self.train_list = train_list
+        self.name_list = name_list
         self.tk = Tk()
         
         #右侧
@@ -47,22 +50,16 @@ class GUI_CMP():
         self.sb3.grid(row=1,column=1,sticky=NS)
         
         self.tk.mainloop()
+    
+    def show(self,name):
+        #显示文字
+        pass
         
     def add_file_list(self):
         #从文件列表中添加文件名到下拉菜单menubar
-        def k():
-            pass
-        self.menu.filelist.add_command(label='test',command=k,columnbreak=1)
-        self.menu.filelist.add_command(label='test',command=k,columnbreak=1)
-        self.menu.filelist.add_command(label='test',command=k,columnbreak=1)
-        self.menu.filelist.add_command(label='test',command=k,columnbreak=1)
-        self.menu.filelist.add_command(label='test',command=k,columnbreak=1)
-        self.menu.filelist.add_command(label='test',command=k,columnbreak=1)
-        self.menu.filelist.add_command(label='test',command=k,columnbreak=1)
-        self.menu.filelist.add_command(label='test',command=k,columnbreak=1)
-        self.menu.filelist.add_command(label='test',command=k,columnbreak=1)
-        self.menu.filelist.add_command(label='test',command=k,columnbreak=1)
-        pass
+        for name in self.name_list:
+            self.menu.filelist.add_command(label=name,command=self.show(name))
+    
     
 if __name__ == '__main__':
-    gui_cmp = GUI_CMP()
+    gui_cmp = GUI_CMP(['a','b'],[],[])
