@@ -55,8 +55,8 @@ def main(nontrans,kmeans):
     w_s = 20    #similarity 伪句子长度
     if os.path.exists('boundary_deserted.txt'):
         os.remove('boundary_deserted.txt')
-    if not os.path.exists('seginfo'):
-        os.mkdir('seginfo')
+    if not os.path.exists('ziseq'):
+        os.mkdir('ziseq')
     
     for (sgmfile,sttfile,resfile) in zip(sgmfiles[:25],sttfiles[:25],resfiles[:25]):
         print(sgmfile,sttfile,resfile)
@@ -395,7 +395,8 @@ def main(nontrans,kmeans):
         stt.close()
         res.close()
         pickle.dump(train,open('trainfile\\%s.train' % name,'wb'))
-        pickle.dump(seg_info,open('seginfo\\%s.seginfo') % name,'wb')
+        pickle.dump(ziseq_of_utt,open('ziseq\\%s.ziseq' % name,'wb'))#序列化ziseq_of_utt,GUI要用
+        pickle.dump(sgmfiles,open('sgmfiles.p','wb'))
         print(name+' finished')        
     
     boundary_deserted.close()    

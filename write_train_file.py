@@ -207,9 +207,10 @@ def main(mode='train'):
     else:
         print('模式选择错误,请检查参数')
     
-    seginfo_list = [piclle.load(open('seginfo\\%s') % f for f \
-                    in os.listdir('seginfo') if f.endswith('seginfo'))]
-    gui = GUI_CMP(name_list[testslice],seginfo_list[testslice],train_list[testslice])#显示图形界面
+    ziseq_list = [pickle.load(open('ziseq\\%s' % f,'rb')) for f \
+                    in os.listdir('ziseq') if f.endswith('ziseq')]
+    sgm_files = pickle.load(open('sgmfiles.p','rb'))
+    gui = GUI_CMP.GUI_CMP(name_list[testslice],ziseq_list[testslice],train_list[testslice],sgm_files[testslice])#显示图形界面
         
         
         
