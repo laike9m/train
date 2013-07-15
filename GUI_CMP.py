@@ -6,6 +6,14 @@ import tkinter.ttk as ttk
 
 class GUI_CMP():
     def __init__(self,name_list,ziseq_list,train_list,sgm_files):
+        k = 0
+        for t in train_list:
+            for d in t:
+                if d['tag']:
+                    k += 1
+        print(k)
+        self.recall = 0
+        self.all = 0
         self.maindir = '..\wav_processing\output\\'
         self.ziseq_list = ziseq_list
         self.train_list = train_list
@@ -50,7 +58,7 @@ class GUI_CMP():
         self.text_sgm.grid(row=1,column=0,sticky=NS)
         self.sb3.grid(row=1,column=1,sticky=NS)
         self.add_file_list()
-        #self.show(self.name_list[0])
+        
         self.tk.mainloop()
     
     def show(self,name):
@@ -61,8 +69,9 @@ class GUI_CMP():
         #text_detect内容生成
         detect_text = self.ziseq_list[index][0]
         for d,seq in zip(self.train_list[index],self.ziseq_list[index][1:]):
-            print(d['tag'])
+            self.all += 1
             if d['tag']:
+                self.recall += 1
                 detect_text += '\n\n'
                 detect_text += seq
             else:
@@ -90,7 +99,8 @@ class GUI_CMP():
         self.text_sgm.config(state=DISABLED)
         self.text_detect.config(state=DISABLED)
         self.f_detect.config(state=DISABLED)
-        
+        print('recall=',self.recall)
+        print('all=',self.all)
         
     def add_file_list(self):
         #从文件列表中添加文件名到下拉菜单menubar
@@ -98,5 +108,6 @@ class GUI_CMP():
             self.menu.filelist.add_command(label=name,command=lambda N=name:self.show(N))
     
     
-if __name__ == '__main__':    
+if __name__ == '__main__':   
     gui_cmp = GUI_CMP(['a','b'],[],[])
+    

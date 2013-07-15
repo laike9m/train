@@ -3,6 +3,7 @@
 import pickle
 import os
 import GUI_CMP
+from copy import deepcopy
 
 def hms2s(res_time):
     #把res中的时间h:m:s转化为以s表示,方便之后比较'''
@@ -121,9 +122,14 @@ def fifteen():  #将原始结果按照15s原则重新计算准确召回f-measure
             test_d_list.append(d)
     real_boundary = len([1 for d in test_d_list if d['isboundary']])
     tag_boundary = 0    #标记出的边界数量
+
     for d,tag in zip(test_d_list,tag_list):
         tag_boundary += int(tag)
         d['tag'] = int(tag) #在dict中添加tag用来表示是否被识别为边界,改变了原始的train因为test_d_list的元素是引用
+    
+    global test_list_cp
+    test_list_cp = deepcopy(train_list[testslice])
+    
     recall = 0  #正确识别的边界数量
     index = -1
     for d in test_d_list:
@@ -210,8 +216,7 @@ def main(mode='train'):
     ziseq_list = [pickle.load(open('ziseq\\%s' % f,'rb')) for f \
                     in os.listdir('ziseq') if f.endswith('ziseq')]
     sgm_files = pickle.load(open('sgmfiles.p','rb'))
-    gui = GUI_CMP.GUI_CMP(name_list[testslice],ziseq_list[testslice],train_list[testslice],sgm_files[testslice])#显示图形界面
-        
+    gui = GUI_CMP.GUI_CMP(name_list[testslice],ziseq_list[testslice],test_list_cp,sgm_files[testslice])#显示图形界面  
         
         
     
